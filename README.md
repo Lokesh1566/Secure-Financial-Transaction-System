@@ -1,17 +1,15 @@
-# 🔐 Secure Financial Transaction System
+# Secure Financial Transaction System
 
-Hybrid encryption system for securing simulated financial transactions using **AES-256-GCM** for data encryption and **RSA-2048** for key exchange. Includes digital signatures for tamper detection and a benchmark tool validated across **10,000+ transactions** with zero integrity failures.
+Hybrid encryption system for securing simulated financial transactions. Uses **AES-256-GCM** for data encryption and **RSA-2048** for key exchange, with digital signatures for tamper detection. Benchmark tool validated across 10,000+ transactions with zero integrity failures.
 
 ![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
 ![AES-256](https://img.shields.io/badge/AES--256-GCM-blue?style=flat-square)
 ![RSA-2048](https://img.shields.io/badge/RSA--2048-OAEP-green?style=flat-square)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)
 
----
+## How it works
 
-## how it works
-
-This implements **hybrid encryption** — the same approach used by TLS/HTTPS under the hood:
+This implements hybrid encryption, the same approach used by TLS/HTTPS under the hood.
 
 ```
 SENDER                                          RECEIVER
@@ -22,9 +20,9 @@ Encrypt AES key with receiver's RSA public key → Decrypt AES key with RSA priv
 Sign payload with sender's RSA private key ────→ Verify signature with sender's public key
 ```
 
-**Why hybrid?** AES is fast for encrypting data but requires sharing a secret key. RSA can securely transmit the key but is too slow for bulk data. Combine them: AES encrypts the data, RSA protects the AES key.
+Why hybrid? AES is fast for encrypting data but requires sharing a secret key. RSA can securely transmit the key but is too slow for bulk data. Combine them: AES encrypts the data, RSA protects the AES key.
 
-## quick start
+## Quick start
 
 ```bash
 # compile
@@ -43,7 +41,7 @@ chmod +x build.sh
 ./build.sh bench    # benchmark
 ```
 
-## project structure
+## Project structure
 
 ```
 src/main/java/com/securepay/
@@ -59,25 +57,25 @@ src/main/java/com/securepay/
     └── TransactionBenchmark.java  # bulk testing tool (10K+ transactions)
 ```
 
-## what the demo shows
+## What the demo shows
 
-1. **AES-256-GCM encryption** — encrypts sensitive card data, decrypts it back, verifies match
-2. **RSA key exchange** — Alice encrypts her AES key with Bob's public key, Bob recovers it
-3. **Full transaction flow** — create tx → encrypt → sign → verify → decrypt
-4. **Tamper detection** — modifies encrypted payload, system catches it immediately
-5. **Integrity test** — runs 100 transactions through the full cycle
+1. **AES-256-GCM encryption.** Encrypts sensitive card data, decrypts it back, verifies match.
+2. **RSA key exchange.** Alice encrypts her AES key with Bob's public key, Bob recovers it.
+3. **Full transaction flow.** Create tx, encrypt, sign, verify, decrypt.
+4. **Tamper detection.** Modifies encrypted payload, system catches it immediately.
+5. **Integrity test.** Runs 100 transactions through the full cycle.
 
-## security choices
+## Security choices
 
 | Component | Choice | Why |
 |-----------|--------|-----|
-| Symmetric cipher | AES-256-GCM | Authenticated encryption — provides confidentiality AND integrity in one step. No padding oracle attacks |
-| Asymmetric cipher | RSA-2048 OAEP | OAEP padding resists Bleichenbacher's attack (PKCS1v1.5 doesn't) |
-| Signatures | SHA256withRSA | Standard, widely supported, provides non-repudiation |
-| IV handling | Random 12-byte IV per encryption | GCM requires unique IVs — reuse completely breaks security |
-| Key size | AES-256 + RSA-2048 | Balanced security vs performance. RSA-4096 would be overkill here |
+| Symmetric cipher | AES-256-GCM | Authenticated encryption, provides confidentiality and integrity in one step. No padding oracle attacks. |
+| Asymmetric cipher | RSA-2048 OAEP | OAEP padding resists Bleichenbacher's attack (PKCS1v1.5 doesn't). |
+| Signatures | SHA256withRSA | Standard, widely supported, provides non-repudiation. |
+| IV handling | Random 12-byte IV per encryption | GCM requires unique IVs. Reuse completely breaks security. |
+| Key size | AES-256 + RSA-2048 | Balanced security vs performance. RSA-4096 would be overkill here. |
 
-## benchmark results
+## Benchmark results
 
 Tested on M1 MacBook Air, Java 17:
 
@@ -91,21 +89,21 @@ Avg encrypt:      ~2.1 ms/tx
 Avg decrypt:      ~2.3 ms/tx
 ```
 
-## what I learned
+## What I learned
 
-- GCM mode is strictly better than CBC for most use cases (authenticated encryption for free)
-- Never reuse IVs/nonces with GCM — it's not just bad practice, it completely compromises the key
-- RSA can only encrypt data shorter than the key size, which is why you encrypt a symmetric key with it, not the actual data
-- OAEP padding adds randomness, so encrypting the same plaintext twice gives different ciphertext (this is a feature, not a bug)
+* GCM mode is strictly better than CBC for most use cases (authenticated encryption for free).
+* Never reuse IVs or nonces with GCM. It's not just bad practice, it completely compromises the key.
+* RSA can only encrypt data shorter than the key size, which is why you encrypt a symmetric key with it and not the actual data.
+* OAEP padding adds randomness, so encrypting the same plaintext twice gives different ciphertext. This is a feature, not a bug.
 
-## team
+## Team
 
 Built by a 4-member team at VIT Vellore using Git for version control and structured sprint planning.
 
-- **Lokesh Reddy Elluri** — Lead developer, encryption architecture
-- Team members — Testing, documentation, integration
+* **Lokesh Reddy Elluri** — Lead developer, encryption architecture
+* Team members — Testing, documentation, integration
 
 ---
 
-**Lokesh Reddy Elluri** — MS Data Science, Indiana University Bloomington
+**Lokesh Reddy Elluri** — MS Data Science, Indiana University Bloomington  
 [LinkedIn](https://linkedin.com/in/lokesh-reddy-elluri-a77a7b201) · [Email](mailto:redfylokesh@gmail.com)
